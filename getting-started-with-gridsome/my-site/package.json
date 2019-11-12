@@ -1,0 +1,14 @@
+{
+  "name": "my-site",
+  "private": true,
+  "scripts": {
+    "build": "gridsome build",
+    "develop": "gridsome develop",
+    "explore": "gridsome explore"
+  },
+  "dependencies": {
+    "@gridsome/source-graphql": "^0.1.0",
+    "buefy": "^0.8.6",
+    "gridsome": "^0.7.0"
+  }
+}
