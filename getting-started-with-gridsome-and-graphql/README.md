@@ -401,3 +401,6 @@ As is with any "Getting Started" piece, it's just the top of the ice-berg. I'd h
 * [8base](https://8base.com/)
 * [Netlify](https://netlify.com/)
 * [Gridsome](https://gridsome.org/)
+
+All code that was shared in this tutorial is available at: https://github.com/8base/Tutorials/tree/master/getting-started-with-gridsome-and-graphql
+
