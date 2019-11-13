@@ -8,6 +8,8 @@ At the end of the day, the web is the wild-digital-west. Especially when it come
 
 So, we will always do our best to make sure that the tutorials stored here stay up-to-date and awesome! If you've come across an issue or error in one of these tutorials on another platform, please let us know! However, always double check whether or not the update version has been published in this repo.
 
+![Just a coder, learning to code code, with a codey background](./assets/coder-emoji.png)
+
 ## Connecting with the Community
 While doing 8base tutorials, you might have some questions. Actually, lets re-phrase that... 8base YOU'LL DEFINITELY HAVE SOME QUESTIONS. When such a situation arises, fret not. We're here for you.
 
