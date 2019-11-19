@@ -60,11 +60,11 @@ export default {
   },
   data() {
     return {
-      /* An array for storing all records fetched */
+      /* The array for storing all records fetched */
       items: [],
       /**
-       * Configure the GraphQL Client, setting the 
-       * authToken only if specified.
+       * Configure the GraphQL Client, setting headers 
+       * only if the authTokenis specified.
        */
       client: new GraphQLClient(this.endpoint, (this.authToken ? {
         headers: {
@@ -75,36 +75,35 @@ export default {
   },
   methods: {
     /**
-     * Callback from onscroll event checks whether the scroll position
-     * is at the bottom of the scroll container.
+     * Callback for the onscroll event checks whether the scroll position
+     * is near the bottom of the scroll container.
      */
     handleScroll({ target: { scrollTop, clientHeight, scrollHeight } }) {
       if (scrollTop + clientHeight >= scrollHeight) this.loadBatch();
     },
     /**
-     * When a new batch of articles are retrieved from the
-     * API, add them to the items array and increase the index
-     * by 1.
+     * When a new batch of articles are retrieved from the API, 
+     * add them to the items.
      */
     handleLoad({ articlesList }) {
       this.items = this.items.concat(articlesList.items);
     },
     /**
      * Use the client to send query to GraphQL API
-     * with the needed variables, 'first' and 'skip'.
+     * with the needed variables, 'limit' and 'skip'.
      */
     loadBatch() {
       this.client
         .request(this.query, {
-          skip: this.items.length,
-          limit: this.limit        
+          limit: this.limit,
+          skip: this.items.length
         })
         .then(this.handleLoad)
         .catch(console.error);
     }
   },
   /**
-   * When the component mounts, load the
+   * When the component mounts (first renders), load the
    * initial batch of posts.
    */
   mounted() {
