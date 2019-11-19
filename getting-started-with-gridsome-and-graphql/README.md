@@ -7,14 +7,14 @@ In this "Getting Started" tutorial, we're going to go over many topics. They are
 * Introduction to Gridsome
 * The way Gridsome Works
 * Starting a new Gridsome Site
-  * Prerequisite
-  * Installation
-  * Project Structure
-  * Plugins
-  * GraphQL data
-  * Layout Components
-  * Pages Components
-  * Deploying Sites
+* Prerequisite
+* Installation
+* Project Structure
+* Plugins
+* GraphQL data
+* Layout Components
+* Pages Components
+* Deploying Sites
 * Wrapping Up
 
 Woo hoo! There's a lot to get to, so let's get going. 
