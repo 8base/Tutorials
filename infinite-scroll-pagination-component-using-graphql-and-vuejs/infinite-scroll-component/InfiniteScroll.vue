@@ -3,15 +3,9 @@
  * Some of the styling is functional, while other
  * is aesthetic. Feel free to play with it!
  */
-* {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 section {
   overflow-y: scroll;
-  margin: 0 auto;
-  height: 736px;
-  width: 414px;
+  height: 500px;
 }
 </style>
 
@@ -45,6 +39,10 @@ export default {
       type: String,
       required: true
     },
+    respKey: {
+      type: String,
+      default: ""
+    },
     limit: {
       type: Number,
       default: 25
@@ -55,7 +53,7 @@ export default {
     },
     authToken: {
       type: String,
-      default: ''
+      default: ""
     }
   },
   data() {
@@ -63,15 +61,25 @@ export default {
       /* The array for storing all records fetched */
       items: [],
       /**
-       * Configure the GraphQL Client, setting headers 
+       * Configure the GraphQL Client, setting headers
        * only if the authTokenis specified.
        */
-      client: new GraphQLClient(this.endpoint, (this.authToken ? {
-        headers: {
-          authorization: `Bearer ${this.authToken}`
-        }
-      } : null))      
+      client: new GraphQLClient(
+        this.endpoint,
+        this.authToken
+          ? {
+              headers: {
+                authorization: `Bearer ${this.authToken}`
+              }
+            }
+          : null
+      )
     };
+  },
+  computed: {
+      respKeyParser() {
+          return this.respKey.split('.')
+      }
   },
   methods: {
     /**
@@ -82,11 +90,14 @@ export default {
       if (scrollTop + clientHeight >= scrollHeight) this.loadBatch();
     },
     /**
-     * When a new batch of articles are retrieved from the API, 
+     * When a new batch of articles are retrieved from the API,
      * add them to the items.
      */
-    handleLoad({ articlesList }) {
-      this.items = this.items.concat(articlesList.items);
+    handleLoad(response) {
+      if (this.respKey) {
+          response = this.respKeyParser.reduce((o, v) => o[v], response)
+      }
+      this.items = this.items.concat(response);
     },
     /**
      * Use the client to send query to GraphQL API
