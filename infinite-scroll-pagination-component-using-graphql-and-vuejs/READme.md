@@ -169,13 +169,15 @@ With that in mind, let's create an example of **how we'd like to use our compone
         
       1) query: The GraphQL query to run. 
       2) limit: How many records to fetch.
-      3) endpoint: Where to fetch the records from.
-      4) authToken: If needed, a token to access the API.
+      3) respKey: A key for accessing the response.
+      4) endpoint: Where to fetch the records from.
+      5) authToken: If needed, a token to access the API.
      -->
      <section class="container"> 
       <InfiniteScroll 
           :query="query"
           :limit="limit" 
+          :respKey="respKey" 
           :endpoint="endpoint" 
           :authToken="authToken">
           <!-- 
@@ -434,7 +436,7 @@ export { InfiniteScroll }
 ```
 
 ## Wrap up and some other fun stuff
-Our pagination component is done! It can now be used with any Vue project with any GraphQL API. 
+Our pagination component is done! It can now be used with any Vue project with any GraphQL API. The component should be rendering out the records in the browser. If not, check out the errors and let me know if something is acting funky!
 
 With that said, here are some useful links!
 

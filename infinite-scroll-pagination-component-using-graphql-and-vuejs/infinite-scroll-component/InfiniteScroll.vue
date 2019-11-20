@@ -32,7 +32,7 @@ import { GraphQLClient } from "graphql-request";
 export default {
   /**
    * Declare the props expected to be passed from
-   * any parent component (the ones in Dev.vue).
+   * any parent component.
    */
   props: {
     query: {

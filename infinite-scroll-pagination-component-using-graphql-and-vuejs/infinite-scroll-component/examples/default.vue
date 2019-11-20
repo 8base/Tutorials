@@ -17,8 +17,8 @@
       1) query: The GraphQL query to run. 
       2) limit: How many records to fetch.
       3) respKey: A key for accessing the response.
-      3) endpoint: Where to fetch the records from.
-      4) authToken: If needed, a token to access the API.
+      4) endpoint: Where to fetch the records from.
+      5) authToken: If needed, a token to access the API.
      -->
      <section class="container"> 
       <InfiniteScroll 
