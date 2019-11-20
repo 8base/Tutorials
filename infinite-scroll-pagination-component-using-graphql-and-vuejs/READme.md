@@ -86,6 +86,7 @@ If you have an existing account, visit your 8base [Dashboard](https://app.8base.
 In the workspace, navigate to the [Data Builder](https://app.8base.com/data/) page and click on “+ Add Table” to start building the data model. Were going to create just one called `Articles` with the following fields.
 
 **Articles**
+
 | Field | Type | Description | Options |
 | ----- | ---- | ----------- | ------- |
 | `title` | Text | Article title | `mandatory=True` |
@@ -102,6 +103,7 @@ To allow our app to securely access the 8base GraphQL API with appropriate permi
 Here we can update what permissions the *FeedAppClientRole* is allowed. In our case, we **ONLY** want it to be able to query/read articles. Let's check/uncheck the appropriate boxes to enforce that.
 
 **FeedAppClientRole Permissions**
+
 | Table | Create | Read | Update | Delete | Fields |
 | ----- | ------ | ---- | ------ | ------ | ------ |
 | Articles | False | All Records | No Records | False | Full Access |
