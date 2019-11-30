@@ -7,6 +7,10 @@ Imagine that you're working on a popular news app. There are 10,000's of article
 
 This is where pagination, in its various forms, comes to save the day. Instead of your feed loading **ALL** of the news, it's able to quickly request – for example – the 25 most recent articles. Then when the user requests more news the feed will fetch articles 26 through 50 and so on. This makes sure that response times are quick and there is never too much data being needlessly transfered.
 
+*Rather just play with the code yourself? it's live on CodeSandbox! Feel free to check it out.*
+
+[![Edit Vue + 8base Infinite Scroll Component](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vue-template-1fxp2?fontsize=14&hidenavigation=1&theme=dark)
+
 ## Getting Started
 So with all of that babel in mind, let's actually build an infinite scroll component using VueJS and a GraphQL API. You'll likely be able to re-use the final component in any of your VueJS projects, so think of it as a new tool in your toolbox once done!
 
