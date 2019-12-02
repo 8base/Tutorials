@@ -3,9 +3,9 @@ It's hard to think of a web or mobile application in 2019 that doesn't have at l
 
 Before we jump into building an infinite scroll component, let's answer one question. *Why is infinite scroll – or pagination in general – useful?* 
 
-Imagine that you're working on a popular news app. There are 10,000's of articles in the archives and dozens being published everyday. The news feed in your app sorts articles by publishing date so that the newest appear first. However, sorted or not, if the feed loads **ALL** articles every time a user opens their app, the **infinite scroll feed would instead be an infinite load feed** and everyone would be sad.
+Imagine that you're working on a popular news app. There are 10,000's of articles in the archives and dozens being published every day. The news feed in your app sorts articles by publishing date so that the newest appear first. However, sorted or not, if the feed loads **ALL** articles every time a user opens their app, the **infinite scroll feed would instead be an infinite load feed** and everyone would be sad.
 
-This is where pagination, in its various forms, comes to save the day. Instead of your feed loading **ALL** of the news, it's able to quickly request – for example – the 25 most recent articles. Then when the user requests more news the feed will fetch articles 26 through 50 and so on. This makes sure that response times are quick and there is never too much data being needlessly transfered.
+This is where pagination, in its various forms, comes to save the day. Instead of your feed loading **ALL** of the news, it's able to quickly request – for example – the 25 most recent articles. Then when the user requests more news the feed will fetch articles 26 through 50 and so on. This makes sure that response times are quick and there is never too much data being needlessly transferred.
 
 *Rather just play with the code yourself? it's live on CodeSandbox! Feel free to check it out.*
 
@@ -102,7 +102,7 @@ Let's add some dummy records to our database. I've uploaded a [DummyData.csv](ht
 On the far right of the *Data Viewer* there is a dropdown with an *Import CSV* option. Select the `DummyData.csv` file from your downloads folder and make sure to specify "Has Header Row" in the modal that appears. You might need to map the column names to the appropriate table fields. However, once done, the import should only take a few seconds.
 
 ##### 4) Roles and Permissions
-To allow our app to securely access the 8base GraphQL API with appropriate permissions, were going to create an API Token with a custom role attached. Navigate to [`Settings > Roles`](https://app.8base.com/settings/roles) and create new role with the name "FeedAppClientRole". Once created, click the role to update its permissions. 
+To allow our app to securely access the 8base GraphQL API with appropriate permissions, were going to create an API Token with a custom role attached. Navigate to [`Settings > Roles`](https://app.8base.com/settings/roles) and create a new role with the name "FeedAppClientRole". Once created, click the role to update its permissions. 
 
 Here we can update what permissions the *FeedAppClientRole* is allowed. In our case, we **ONLY** want it to be able to query/read articles. Let's check/uncheck the appropriate boxes to enforce that.
 
@@ -124,12 +124,12 @@ There are a few ways to obtain the endpoint. However, just navigate to the works
 ##### 6) Testing that it works!
 We should probably test that our API is properly set up before we keep going. How, you might ask? By querying it! Instead of setting up or using some GraphQL client, let's just run a good-'ol-fashion curl command in our terminal and view the response.
 
-Make sure to replace `<YOUR_API_ENDPOINT>` with your workspace API endpoint and `<YOU_API_TOKEN>` with the API Token you created.
+Make sure to replace `<YOUR_API_ENDPOINT>` with your workspace API endpoint and `<YOUR_API_TOKEN>` with the API Token you created.
 
 ```shell
 curl -X POST '<YOUR_API_ENDPOINT>' \
      -H "Content-Type: application/json" \
-     -H 'Authorization: Bearer <YOU_API_TOKEN>' \
+     -H 'Authorization: Bearer <YOUR_API_TOKEN>' \
      -d '{ "query": "{ articlesList(first: 10) { items { title } } }"}'
 ```
 Does the JSON response show a list of article titles? Woo hoo! Nice work. We're now ready to keep cruizing and move into the creating the component.
@@ -420,13 +420,13 @@ export default {
 
 Naturally, this part is a little bit meatier than the others. That said, there are really only several things worth pointing out; the in-code documentation should handle the rest.
 
-First off, we initialize the `GraphQLClient` and conditionally pass it `headers` depending on whether or not an `authToken` was passed. The initialized client is what gets used in the `loadBatch` method to execute GraphQL calls to our API. It uses the required `query` prop, which recieves the `skip` and `limit` variables.
+First off, we initialize the `GraphQLClient` and conditionally pass it `headers` depending on whether or not an `authToken` was passed. The initialized client is what gets used in the `loadBatch` method to execute GraphQL calls to our API. It uses the required `query` prop, which receives the `skip` and `limit` variables.
 
-The `skip` and `limit` variables are what the `articlesList` query requires to handle pagination. While `limit` simply represents *how many records to load per request*, `skip` specifies *how many records have already been loaded* – or *from which index in the list to slice*. Thus, if we initially fetch records `A`, `B`, and `C` from our API with `limit = 3, skip = 0`, and then on the following request specify `limit = 3, skip = 3`, we'll recieve records `D`, `E`, and `F`.
+The `skip` and `limit` variables are what the `articlesList` query requires to handle pagination. While `limit` simply represents *how many records to load per request*, `skip` specifies *how many records have already been loaded* – or *from which index in the list to slice*. Thus, if we initially fetch records `A`, `B`, and `C` from our API with `limit = 3, skip = 0`, and then on the following request specify `limit = 3, skip = 3`, we'll receive records `D`, `E`, and `F`.
 
 Lastly, let's look at the `handleScroll` method. This is that callback method for the `@scroll` event. By unpacking the passed `event` argument we get access to the `scrollTop`, `clientHeight`, and `scrollHeight` values. The `clientHeight` is a fixed value that represents the height of the scrollable element in pixels. Meanwhile, `scrollTop` is changing on every scroll event to represent the distance from the top of the scroll container to the current position. 
 
-If the `clientHeight` plus `scrollTop` is greater than to or equal to the `scrollHeight` (the scrollable height of element in pixels) then we know the container has been fully scrolled!
+If the `clientHeight` plus `scrollTop` is greater than to or equal to the `scrollHeight` (the scrollable height of the element in pixels) then we know the container has been fully scrolled!
 
 ### `index.js`
 Wondering why your component isn't appearing in the growser ([http://localhost:8080](http://localhost:8080))? We didn't export it!
