@@ -1,4 +1,4 @@
-# (IN PROGRESS - NOT COMPLETE) Building an Infinite Scroll Component using VueJS and GraphQL
+# Building an Infinite Scroll Component using VueJS and GraphQL
 It's hard to think of a web or mobile application in 2019 that doesn't have at least one feed or list component. Whether it's for a news feed, search results page, or tabbed-out list of resources, different methods of pagination are constantly being used. One of the most popular pagination experiences is the infamously addictive **Infinite Scroll**.
 
 Before we jump into building an infinite scroll component, let's answer one question. *Why is infinite scroll – or pagination in general – useful?* 
@@ -10,6 +10,8 @@ This is where pagination, in its various forms, comes to save the day. Instead o
 *Rather just play with the code yourself? it's live on CodeSandbox! Feel free to check it out.*
 
 [![Edit Vue + 8base Infinite Scroll Component](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vue-template-1fxp2?fontsize=14&hidenavigation=1&theme=dark)
+
+[Also... here's the GitHub repo](https://github.com/8base/Tutorials/tree/master/infinite-scroll-pagination-component-using-graphql-and-vuejs/infinite-scroll-component)
 
 ## Getting Started
 So with all of that babel in mind, let's actually build an infinite scroll component using VueJS and a GraphQL API. You'll likely be able to re-use the final component in any of your VueJS projects, so think of it as a new tool in your toolbox once done!
@@ -149,7 +151,6 @@ With these bullets in mind, let's add some code to our files so that we have a s
 ### `examples/default.vue`
 Again, the reason that we have the *examples/default.vue* file is so we can import the component being developed, like we would in a full application. Go ahead and run `vue serve examples/default.vue` – or `vue serve default.vue`, if you're already in the examples directory. This will spin up the instant prototyping development server. You may be see some errors while making incremental file updates; just ignore them for now.
 
-##### `<template> and <style>`
 Per our simple spec, we want an infinite scroll component that fetches a specified number of records from a GraphQL API. Additionally, we want to be able to specify a template that will get rendered for each record that's fetched.
 
 With that in mind, let's create an example of **how we'd like to use our component**. Always read the in-code comments!
@@ -442,6 +443,6 @@ export { InfiniteScroll }
 ## Wrap up and some other fun stuff
 Our pagination component is done! It can now be used with any Vue project with any GraphQL API. The component should be rendering out the records in the browser. If not, check out the errors and let me know if something is acting funky!
 
-With that said, here are some useful links!
+Additionally, if you're interested in building a full pagination component (tabs with navigation) as opposed to an infinite scroll. Check out this [Pagination in Vue.js](https://medium.com/@denny.headrick/pagination-in-vue-js-4bfce47e573b) article by Denny Hendrick.
 
-* [Tutorial's GitHub repository with examples](https://github.com/8base/Tutorials/tree/master/infinite-scroll-pagination-component-using-graphql-and-vuejs/infinite-scroll-component)
+With that said, here is the [tutorial's GitHub repository with examples](https://github.com/8base/Tutorials/tree/master/infinite-scroll-pagination-component-using-graphql-and-vuejs/infinite-scroll-component)
