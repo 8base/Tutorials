@@ -443,6 +443,6 @@ export { InfiniteScroll }
 ## Wrap up and some other fun stuff
 Our pagination component is done! It can now be used with any Vue project with any GraphQL API. The component should be rendering out the records in the browser. If not, check out the errors and let me know if something is acting funky!
 
-Additionally, if you're interested in building a full pagination component (tabs with navigation) as opposed to an infinite scroll. Check out this [Pagination in Vue.js](https://medium.com/@denny.headrick/pagination-in-vue-js-4bfce47e573b) article by Denny Hendrick.
+Additionally, if you're interested in building a full pagination component (tabs with navigation) as opposed to an infinite scroll. Check out this [Pagination in Vue.js](https://medium.com/@denny.headrick/pagination-in-vue-js-4bfce47e573b) article by [Denny Hendrick](https://dennyheadrick.com/).
 
 With that said, here is the [tutorial's GitHub repository with examples](https://github.com/8base/Tutorials/tree/master/infinite-scroll-pagination-component-using-graphql-and-vuejs/infinite-scroll-component)
