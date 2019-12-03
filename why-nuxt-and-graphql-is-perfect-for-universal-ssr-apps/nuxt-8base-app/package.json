@@ -1,0 +1,22 @@
+{
+  "name": "nuxt-8base-app",
+  "version": "1.0.0",
+  "description": "My well-made Nuxt.js project",
+  "author": "Sebastian Scholl",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/apollo": "^4.0.0-rc18",
+    "@nuxtjs/bulma": "^1.2.1",
+    "@nuxtjs/dotenv": "^1.4.0",
+    "apollo-cache-inmemory": "^1.6.3",
+    "graphql-tag": "^2.10.1",
+    "nuxt": "^2.0.0"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,10 @@
+query {
+    articlesList(first: 25) {
+        count
+        items {
+            id
+            body
+            title
+        }
+    }
+}

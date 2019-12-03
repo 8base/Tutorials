@@ -149,7 +149,7 @@ With these bullets in mind, let's add some code to our files so that we have a s
 ### `examples/default.vue`
 Again, the reason that we have the *examples/default.vue* file is so we can import the component being developed, like we would in a full application. Go ahead and run `vue serve examples/default.vue` – or `vue serve default.vue`, if you're already in the examples directory. This will spin up the instant prototyping development server. You may be see some errors while making incremental file updates; just ignore them for now.
 
-##### <template> and <style>
+##### `<template> and <style>`
 Per our simple spec, we want an infinite scroll component that fetches a specified number of records from a GraphQL API. Additionally, we want to be able to specify a template that will get rendered for each record that's fetched.
 
 With that in mind, let's create an example of **how we'd like to use our component**. Always read the in-code comments!
