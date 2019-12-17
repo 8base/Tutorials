@@ -1,0 +1,10 @@
+{
+  "name": "combine-rest-apis-in-graphql-using-8base",
+  "functions": [
+    {
+      "name": "giphySearch",
+      "handler": "giphySearch.handler",
+      "pathToFunction": "src/resolvers/giphySearch/handler.ts"
+    }
+  ]
+}

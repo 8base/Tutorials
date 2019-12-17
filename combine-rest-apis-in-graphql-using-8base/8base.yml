@@ -1,0 +1,6 @@
+functions:
+  giphySearch:
+    type: resolver
+    handler:
+      code: src/resolvers/giphySearch/handler.ts
+    schema: src/resolvers/giphySearch/schema.graphql

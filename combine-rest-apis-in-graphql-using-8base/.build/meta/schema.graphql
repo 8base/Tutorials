@@ -1,0 +1,139 @@
+# This file was generated using 8base CLI.
+#
+# To learn more about writing custom GraphQL resolver types, visit
+# the 8base documentation at:
+#
+# https://docs.8base.com/8base-console/custom-functions/resolvers
+#
+
+type GiphyImageOriginal {
+  size: Int,
+  width: Int,
+  frames: Int,
+  height: Int,
+  mp4: String,
+  url: String,
+  webp: String,
+  hash: String,
+  mp4_size: Int,
+  webp_size: Int
+}
+
+type GiphyImageSized {
+    url: Int,
+    width: Int,
+    height: Int,
+    size: String
+}
+
+type GiphyImageWebp {
+    url: Int,
+    width: Int,
+    height: Int,
+    size: String,
+    webp: String,
+    webp_size: Int,
+}
+
+type GiphyImageMp4 {
+    width: Int,
+    height: Int,
+    mp4: String,
+    mp4_size: Int,
+}
+
+type GiphyImageWebpMp4 {
+    url: Int,
+    width: Int,
+    height: Int,
+    mp4: String,
+    size: String,
+    webp: String,
+    mp4_size: Int,
+    webp_size: Int,
+}
+
+type GiphyImageStill {
+    url: Int,
+    width: Int,
+    height: Int
+}
+
+type GiphyImageLooping {
+    mp4: String,
+    mp4_size: Int
+}
+
+type GiphyImageFormats {
+  original: GiphyImageOriginal,
+  downsized_large: GiphyImageSized,
+  fixed_height_downsampled: GiphyImageWebp,
+  fixed_height_small_still: GiphyImageSized,
+  downsized_still: GiphyImageSized,
+  fixed_height_still: GiphyImageSized,
+  downsized_medium: GiphyImageSized,
+  downsized: GiphyImageSized,
+  preview_webp: GiphyImageSized,
+  original_mp4: GiphyImageMp4,
+  fixed_height_small: GiphyImageWebpMp4,
+  fixed_height: GiphyImageWebpMp4,
+  downsized_small: GiphyImageMp4,
+  preview: GiphyImageMp4,
+  fixed_width_downsampled: GiphyImageWebp,
+  fixed_width_small_still: GiphyImageSized,
+  fixed_width_small: GiphyImageWebpMp4,
+  original_still: GiphyImageSized,
+  fixed_width_still: GiphyImageSized,
+  looping: GiphyImageLooping,
+  fixed_width: GiphyImageWebpMp4,
+  preview_gif: GiphyImageSized,
+  four80_w_still: GiphyImageStill,
+}
+
+type GiphySearchResult {
+  id: String,
+  url: String,
+  type: String,
+  slug: String,
+  title: String,
+  source: String,
+  rating: String,
+  is_sticker: Int,
+  username: String,
+  embed_url: String,
+  bitly_url: String,
+  source_tld: String,
+  content_url: String,
+  bitly_gif_url: String,
+  import_datetime: String,
+  source_post_url: String,
+  trending_datetime: String,
+  images: GiphyImageFormats,
+  analytics: GiphyAnalytics
+}
+
+type GiphyAnalyticsObject {
+  url: String
+}
+
+type GiphyAnalytics {
+    onsent: GiphyAnalyticsObject,
+    onload: GiphyAnalyticsObject,
+    onclick: GiphyAnalyticsObject
+}
+
+type GiphyPagination {
+    total_count: Int, 
+    offset: Int,
+    count: Int 
+}
+
+type GiphyResult {
+  count: Int,
+  pagination: GiphyPagination,
+  results: [GiphySearchResult!]
+}
+
+extend type Query {
+  giphySearch(search: String!, limit: Int!): GiphyResult
+}

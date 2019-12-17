@@ -1,7 +1,10 @@
 # Building an Infinite Scroll Component using VueJS and GraphQL
+
 It's hard to think of a web or mobile application in 2019 that doesn't have at least one feed or list component. Whether it's for a news feed, search results page, or tabbed-out list of resources, different methods of pagination are constantly being used. One of the most popular pagination experiences is the infamously addictive **Infinite Scroll**.
 
 Before we jump into building an infinite scroll component, let's answer one question. *Why is infinite scroll – or pagination in general – useful?* 
+
+![Infinite phone gif](https://thepracticaldev.s3.amazonaws.com/i/lumpvntr5zfdzahpskqv.gif)
 
 Imagine that you're working on a popular news app. There are 10,000's of articles in the archives and dozens being published every day. The news feed in your app sorts articles by publishing date so that the newest appear first. However, sorted or not, if the feed loads **ALL** articles every time a user opens their app, the **infinite scroll feed would instead be an infinite load feed** and everyone would be sad.
 
@@ -22,7 +25,7 @@ This tutorial assumes that you are:
 1. Somewhat familiar with [Vue](http://vuejs.org/)
 2. Have [Node](https://nodejs.org/en/) installed on your computer
 3. Use [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/lang/en/)
-4. Are excited about playing with GraphQL!
+4. You are excited about playing with GraphQL!
 
 ## Using Vue instant prototyping
 The most under-valued and epic (in my humble opinion) Vue feature is [instant prototyping](https://cli.vuejs.org/guide/prototyping.html). What does that mean? It means that without having to set up an entire Vue project you can develop a single component in isolation. 
@@ -30,7 +33,7 @@ The most under-valued and epic (in my humble opinion) Vue feature is [instant pr
 This will let us (almost) immediately jump into developing our component, so let's install it during our short set up section.
 
 ## Installing the CLI and dependences
-First we're going to install the Vue CLI and an extra extension package that gives us the ability to use instant prototyping.
+First, we're going to install the Vue CLI and an extra extension package that gives us the ability to use instant prototyping.
 
 ```bash
 # Install Vue CLI
@@ -39,7 +42,7 @@ npm install -g @vue/cli
 npm install -g @vue/cli-service-global
 ```
 
-Next, create a new directory on your computer and call it whatever you'd like. In here we'll write all the code for our component.
+Next, create a new directory on your computer and call it whatever you'd like. Here we'll write all the code for our component.
 
 ```bash
 # Create new directory
@@ -48,7 +51,7 @@ mkdir infinite-scroll-component
 cd infinite-scroll-component
 ```
 
-Now, we're going to create our component files and an examples directory. Why? Because when developing our component we'll want to import/interact with it like we would in a full application. Thus, the `examples` directory will allow us to do just that by requiring our infinite scroll component as a local dependency.
+Now, we're going to create our component files and an `examples` directory. Why? Because when developing our component we'll want to import/interact with it like we would in a full application. Thus, the `examples` directory will allow us to do just that by requiring our infinite scroll component as a local dependency.
 
 ```bash
 # This will create the examples directory and all required files
@@ -63,7 +66,7 @@ infinite-scroll-component
 └── infiniteScroll.vue
 ```
 
-Finally, we're going to want to initilize a new NPM project in **both the root and examples directory**. When doing this, just accept all the defaults before installing the project's dependencies.
+Finally, we're going to want to initialize a new NPM project in **both the root and examples directory**. When doing this, just accept all the defaults before installing the project's dependencies.
 
 ```bash
 # Init new npm project in ROOT directory
@@ -80,7 +83,7 @@ Voila! If only setup was always that easy...
 
 With instant prototyping we can now run `vue serve FILE_NAME` and it will spin up the development server for that single file. Try it! You will probably be... potentially underwhelmed since our files are still empty 🙃
 
-That said, before we start writing our Vue components we're going to setup the GraphQL API. Why? Because it is **SO MUCH MORE FUN** developing when there's data. Hopefully you agree!
+That said before we start writing our Vue components we're going to set up the GraphQL API. Why? Because it is **SO MUCH MORE FUN** developing when there's data. Hopefully, you agree!
 
 ## Setting up a GraphQL API on 8base
 There are many different ways to accomplish setting up a GraphQL server and API. However, we'll use 8base so that everything is extremely quick to set up and super stable. To get started, we'll only need to take the following few steps.
@@ -98,13 +101,13 @@ In the workspace, navigate to the [Data Builder](https://app.8base.com/data/) pa
 | `title` | Text | Article title | `mandatory=True` |
 | `body` | Text | Article body | `mandatory=True`, `characters=1000` |
 
-##### 3) Building the Data Model
+##### 3) Adding Dummy Data
 Let's add some dummy records to our database. I've uploaded a [DummyData.csv](https://raw.githubusercontent.com/8base/Tutorials/master/infinite-scroll-pagination-component-using-graphql-and-vuejs/DummyData.csv) file. Save it and then open the `Data` tab that's right next to the `Schema` tab in the 8base *Data Builder*. 
 
 On the far right of the *Data Viewer* there is a dropdown with an *Import CSV* option. Select the `DummyData.csv` file from your downloads folder and make sure to specify "Has Header Row" in the modal that appears. You might need to map the column names to the appropriate table fields. However, once done, the import should only take a few seconds.
 
 ##### 4) Roles and Permissions
-To allow our app to securely access the 8base GraphQL API with appropriate permissions, were going to create an API Token with a custom role attached. Navigate to [`Settings > Roles`](https://app.8base.com/settings/roles) and create a new role with the name "FeedAppClientRole". Once created, click the role to update its permissions. 
+To allow our app to securely access the 8base GraphQL API with appropriate permissions were going to create an API Token with a custom role attached. Navigate to [`Settings > Roles`](https://app.8base.com/settings/roles) and create a new role with the name "FeedAppClientRole". Once created, click the role to update its permissions. 
 
 Here we can update what permissions the *FeedAppClientRole* is allowed. In our case, we **ONLY** want it to be able to query/read articles. Let's check/uncheck the appropriate boxes to enforce that.
 
@@ -124,7 +127,7 @@ Finally, let’s copy our workspace’s API endpoint. This endpoint is unique to
 There are a few ways to obtain the endpoint. However, just navigate to the workspace **Home** page and you’ll find the endpoint in the bottom left.
 
 ##### 6) Testing that it works!
-We should probably test that our API is properly set up before we keep going. How, you might ask? By querying it! Instead of setting up or using some GraphQL client, let's just run a good-'ol-fashion curl command in our terminal and view the response.
+We should probably test that our API is properly set up before we keep going. How, you might ask? By querying it! Instead of setting up or using some GraphQL client, let's just run a good 'ol fashion curl command in our terminal and view the response.
 
 Make sure to replace `<YOUR_API_ENDPOINT>` with your workspace API endpoint and `<YOUR_API_TOKEN>` with the API Token you created.
 
@@ -140,7 +143,7 @@ Does the JSON response show a list of article titles? Woo hoo! Nice work. We're 
 So, let's quickly list out what our infinite scroll component is going to have to do. That way we'll be able to think more clearly about the steps we need to take.
 
 **Simple Spec**
-* Query a GraphQL endpoint for *N* many record.
+* Query a GraphQL endpoint for *N* many records.
 * Allow the user to scroll vertically through a rendered list.
 * Recognize when the user has reached the end of the list.
 * Query *N* additional records and append them to the list.
@@ -149,7 +152,7 @@ So, let's quickly list out what our infinite scroll component is going to have t
 With these bullets in mind, let's add some code to our files so that we have a structure to work with.
 
 ### `examples/default.vue`
-Again, the reason that we have the *examples/default.vue* file is so we can import the component being developed, like we would in a full application. Go ahead and run `vue serve examples/default.vue` – or `vue serve default.vue`, if you're already in the examples directory. This will spin up the instant prototyping development server. You may be see some errors while making incremental file updates; just ignore them for now.
+Again, the reason that we have the *examples/default.vue* file is so we can import the component being developed like we would in a full application. Go ahead and run `vue serve examples/default.vue` – or `vue serve default.vue`, if you're already in the examples directory. This will spin up the instant prototyping development server. You may see some errors while making incremental file updates; just ignore them for now.
 
 Per our simple spec, we want an infinite scroll component that fetches a specified number of records from a GraphQL API. Additionally, we want to be able to specify a template that will get rendered for each record that's fetched.
 
@@ -169,8 +172,7 @@ With that in mind, let's create an example of **how we'd like to use our compone
 
 <template>
     <!-- 
-      Here's our InfiniteScroll component. We want to pass it some simple
-      props so that the component knows... 
+      Here's our InfiniteScroll component. We want to pass it some simple props so that the component knows... 
         
       1) query: The GraphQL query to run. 
       2) limit: How many records to fetch.
@@ -186,8 +188,7 @@ With that in mind, let's create an example of **how we'd like to use our compone
           :endpoint="endpoint" 
           :authToken="authToken">
           <!-- 
-            Instead of being stuck with a generic template, we want to
-            be able to render out each record that gets fetched with a
+            Instead of being stuck with a generic template, we want to be able to render out each record that gets fetched with a
             custom template. 
             
             1) Using v-slot we can name the scoped data that's passed to the template.
@@ -195,8 +196,7 @@ With that in mind, let's create an example of **how we'd like to use our compone
           -->
           <template v-slot="item">
               <!-- 
-                Using the scoped slot data, we're creating a simple template 
-                that will render out the wanted data from our fetched records.
+                Using the scoped slot data, we're creating a simple template that will render out the wanted data from our fetched records.
                 -->
               <article>
                 <h4>{{ item.title }}</h4>
@@ -430,7 +430,7 @@ Lastly, let's look at the `handleScroll` method. This is that callback method fo
 If the `clientHeight` plus `scrollTop` is greater than to or equal to the `scrollHeight` (the scrollable height of the element in pixels) then we know the container has been fully scrolled!
 
 ### `index.js`
-Wondering why your component isn't appearing in the growser ([http://localhost:8080](http://localhost:8080))? We didn't export it!
+Wondering why your component isn't appearing in the browser ([http://localhost:8080](http://localhost:8080))? We didn't export it!
 
 Update the `index.js` file with the following:
 

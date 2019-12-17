@@ -1,0 +1,17 @@
+{
+  "functions": [
+    {
+      "name": "giphySearch",
+      "handler": "giphySearch.handler"
+    }
+  ],
+  "resolvers": [
+    {
+      "name": "giphySearch",
+      "functionName": "giphySearch",
+      "gqlType": "Query"
+    }
+  ],
+  "triggers": [],
+  "webhooks": []
+}
