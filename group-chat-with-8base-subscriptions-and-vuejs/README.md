@@ -17,7 +17,7 @@ cd group-chat
 Add dependencies.
 
 ```sh
-yarn add subscriptions-transport-ws isomorphic-ws apollo-link-http apollo-cache-inmemory apollo-boost graphql graphql-tag
+yarn add vue-quick-chat subscriptions-transport-ws isomorphic-ws apollo-link-http apollo-cache-inmemory apollo-boost graphql graphql-tag
 ```
 
 Add environment variables to an `.env.local` file in the root of the project.

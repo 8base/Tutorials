@@ -1,23 +1,20 @@
 <style>
-#app {
+html, body, #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: grey;
   text-align: center;
   color: #2c3e50;
+  flex: 1;
+  height: 100%;
+  display: flex;
 }
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.signup {
+  justify-self: center;
+  align-self: center;
+  width: 100%;
 }
 
 .chat {
@@ -65,8 +62,6 @@
 <template>
   <div id="app">
     <div v-if="username" class="chat">
-      <h3>Hi {{ username }}!</h3>
-
       <div class="msgs">
         <div 
           :key="i"
@@ -86,8 +81,9 @@
       </div>
     </div>
 
-    <div v-else>
-      <label for="username">Username</label> -
+    <div v-else class="signup">
+      <label for="username">Set a username</label>
+      <br>
       <input name="username" type="text" @blur="setUsername" />
     </div>
   </div>
