@@ -1,0 +1,41 @@
+# This file was generated using 8base CLI.
+#
+# To learn more about writing custom GraphQL resolver types, visit
+# the 8base documentation at:
+#
+# https://docs.8base.com/8base-console/custom-functions/resolvers
+#
+ 
+type RandomUserName {
+  title: String,
+  first: String,
+  last: String
+}
+
+type RandomUserDob {
+  age: String,
+  date: Date
+}
+
+type RandomUserPicture {
+  thumbnail: String,
+  medium: String,
+  large: String
+}
+
+type RandomUserResolverResult {
+  picture: RandomUserPicture,
+  name: RandomUserName,
+  dob: RandomUserDob,
+  gender: String,
+  email: String,
+  phone: String,
+  cell: String,
+  nat: String
+}
+
+extend type RandomUserQuery {
+  generate(nationality: String!): RandomUserResolverResult
+}
+
+

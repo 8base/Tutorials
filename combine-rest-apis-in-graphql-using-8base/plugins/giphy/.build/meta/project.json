@@ -1,0 +1,15 @@
+{
+  "name": "giphy",
+  "functions": [
+    {
+      "name": "search",
+      "handler": "search.handler",
+      "pathToFunction": "src/resolvers/search/handler.ts"
+    },
+    {
+      "name": "getById",
+      "handler": "getById.handler",
+      "pathToFunction": "src/resolvers/getById/handler.ts"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+functions:
+  search:
+    description: An endpoint for searching Giphy.
+    type: resolver
+    handler:
+      code: src/resolvers/search/handler.ts
+    schema: src/resolvers/search/schema.graphql
+  getById:
+    type: resolver
+    handler:
+      code: src/resolvers/getById/handler.ts
+    schema: src/resolvers/getById/schema.graphql

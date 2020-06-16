@@ -19,15 +19,7 @@
  *  8base invoke-local giphySearch -p src/resolvers/giphySearch/mocks/request.json
  */
 import axios from 'axios';
-
-const transformKey = (obj, path, newKey) => {
-  if (path.length === 1) {
-    obj[newKey] = obj[path]
-    delete obj[path];
-    return
-  }
-  return transformKey(obj[path[0]], path.slice(1), newKey)
-}
+import transformKey from '../../shared/transformKey';
 
 export default async (event: any, ctx: any) : Promise<any> => {
   const { 
@@ -52,10 +44,7 @@ export default async (event: any, ctx: any) : Promise<any> => {
     )
   } catch(e) {
     console.log('Error: ', e);
-
-    return {
-      error: [e]
-    }
+    return;
   }
 
   resp.data.data.forEach(image => transformKey(image, ['images', '480w_still'], 'four80_w_still'))

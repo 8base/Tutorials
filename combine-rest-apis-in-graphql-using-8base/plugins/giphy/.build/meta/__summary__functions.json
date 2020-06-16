@@ -1,0 +1,26 @@
+{
+  "functions": [
+    {
+      "name": "search",
+      "handler": "search.handler"
+    },
+    {
+      "name": "getById",
+      "handler": "getById.handler"
+    }
+  ],
+  "resolvers": [
+    {
+      "name": "search",
+      "functionName": "search",
+      "gqlType": "GiphyQuery"
+    },
+    {
+      "name": "getById",
+      "functionName": "getById",
+      "gqlType": "GiphyQuery"
+    }
+  ],
+  "triggers": [],
+  "webhooks": []
+}

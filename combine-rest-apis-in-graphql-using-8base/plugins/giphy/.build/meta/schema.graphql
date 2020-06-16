@@ -134,6 +134,20 @@ type GiphyResult {
   results: [GiphySearchResult!]
 }
 
-extend type Query {
-  giphySearch(search: String!, limit: Int!): GiphyResult
+extend type GiphyQuery {
+  search(search: String!, limit: Int!): GiphyResult
+}# This file was generated using 8base CLI.
+#
+# To learn more about writing custom GraphQL resolver types, visit
+# the 8base documentation at:
+#
+# https://docs.8base.com/8base-console/custom-functions/resolvers
+#
+ 
+type GetByIdResult {
+  data: GiphySearchResult!
+}
+
+extend type GiphyQuery {
+  getById(id: String!): GetByIdResult
 }

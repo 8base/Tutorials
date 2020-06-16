@@ -1,6 +1,6 @@
-functions:
-  giphySearch:
-    type: resolver
-    handler:
-      code: src/resolvers/giphySearch/handler.ts
-    schema: src/resolvers/giphySearch/schema.graphql
+functions: null
+plugins:
+  - name: giphy
+    path: plugins/giphy/8base.yml
+  - name: randomUser
+    path: plugins/randomUser/8base.yml

@@ -1,0 +1,7 @@
+functions:
+  generate:
+    description: Runs test mutation
+    type: resolver
+    handler:
+      code: src/resolvers/generate/handler.ts
+    schema: src/resolvers/generate/schema.graphql
