@@ -1,41 +1,49 @@
 import gql from "graphql-tag";
 
-export const ListParticipants = gql`
-  query {
-    participantsList {
+export const InitialChatData = gql`
+  {
+    usersList {
       items {
         id
-        intId
-        username
+        email
+      }
+    }
+    messagesList(last: 10) {
+      items {
+        content
+        createdAt
+        author {
+          id
+          email
+        }
       }
     }
   }
 `;
 
-export const CreateParticipant = gql`
-  mutation($username: String!) {
-    participantCreate(data: { username: $username }) {
+export const CreateUser = gql`
+  mutation($email: String!) {
+    userCreate(data: { email: $email, roles: { connect: { name: "Guest" } } }) {
       id
     }
   }
 `;
 
-export const DeleteParticipant = gql`
+export const DeleteUser = gql`
   mutation($id: ID!) {
-    participantDelete(data: { id: $id, force: true }) {
+    userDelete(data: { id: $id, force: true }) {
       success
     }
   }
 `;
 
-export const ParticipantsSubscription = gql`
+export const UsersSubscription = gql`
   subscription {
-    Participants(filter: { mutation_in: [create, delete] }) {
+    Users(filter: { mutation_in: [create, delete] }) {
       mutation
       node {
         id
-        intId
-        username
+        email
       }
     }
   }
@@ -43,9 +51,7 @@ export const ParticipantsSubscription = gql`
 
 export const CreateMessage = gql`
   mutation($id: ID!, $content: String!) {
-    messageCreate(
-      data: { content: $content, participant: { connect: { id: $id } } }
-    ) {
+    messageCreate(data: { content: $content, user: { connect: { id: $id } } }) {
       id
     }
   }
@@ -57,9 +63,9 @@ export const MessagesSubscription = gql`
       node {
         content
         createdAt
-        participant {
+        author {
           id
-          intId
+          email
         }
       }
     }

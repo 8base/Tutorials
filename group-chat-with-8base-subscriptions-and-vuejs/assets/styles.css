@@ -1,0 +1,44 @@
+#app {
+  height: 100%;
+}
+
+.chat {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.chat .header {
+  margin-bottom: 20px;
+  border-bottom: 1px solid gray;
+}
+
+.chat .header button {
+  float: right;
+}
+
+.chat .me {
+  text-align: right;
+}
+
+.chat .msg {
+  margin-bottom: 10px;
+}
+
+.chat .input {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.participant-thumb {
+  display: none;
+}
+
+.signup {
+  width: 25%;
+  height: 500px;
+  display: flex;
+  margin: 0 auto;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+}

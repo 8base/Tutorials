@@ -1,53 +1,43 @@
-<style scoped>
-#app {
-  height: 100%;
-}
-
-.chat {
-  width: 50%;
-  margin: 0 auto;
-}
-
-.signup {
-  width: 25%;
-  height: 500px;
-  display: flex;
-  margin: 0 auto;
-  text-align: center;
-  flex-direction: column;
-  justify-content: center;
-}
-</style>
-
 <template>
   <div id="app">
-    <div v-if="myself" class="chat">
-      <Chat
-        :colors="colors"
-        :myself="myself"
-        :messages="messages"
-        :send-images="false"
-        :submit-icon-size="30"
-        :display-header="true"
-        :hide-close-button="true"
-        :border-style="borderStyle"
-        :participants="participants"
-        :submit-image-icon-size="30"
-        :scroll-bottom="scrollBottom"
-        :chat-title="'8base Vue-Chat'"
-        :timestamp-config="timestampConfig"
-        @onMessageSubmit="createMessage"
-      />
+    <div v-if="me.id" class="chat">
+      <div class="header">
+        {{ participants.length }} Online Users
+        <br />
+        <small>{{ onlineUsersString }}</small>
+      </div>
+
+      <div
+        v-for="(msg, index) in messages"
+        :key="index"
+        :class="['msg', { me: msg.participant.id === me.id }]"
+      >
+        <p>{{ msg.content }}</p>
+        <small
+          ><strong>{{ msg.participant.email }}</strong>
+          {{ msg.createdAt }}</small
+        >
+      </div>
+
+      <div class="input">
+        <input
+          type="text"
+          placeholder="Say something..."
+          v-model="newMessage"
+        />
+        <button @click="createMessage">Send</button>
+      </div>
     </div>
 
     <div v-else class="signup">
       <label for="email">Sign up to chat!</label>
       <br />
       <input
-        v-model="username"
         type="text"
-        placeholder="first name"
-        @blur="createParticipant"
+        v-model="me.email"
+        placeholder="What's your email?"
+        @blur="createUser"
+        required
       />
     </div>
   </div>
@@ -58,148 +48,143 @@
 import Api from "./utils/api";
 import Wss from "./utils/wss";
 
-/* Quick Chat and Dependencies */
-import { Chat } from "vue-quick-chat";
-import chatConfig from "./utils/chat";
-import "vue-quick-chat/dist/vue-quick-chat.css";
-
 /* GraphQL operations */
 import {
-  ListParticipants,
-  CreateParticipant,
-  DeleteParticipant,
-  ParticipantsSubscription,
+  InitialChatData,
+  CreateUser,
+  DeleteUser,
+  UsersSubscription,
   CreateMessage,
   MessagesSubscription,
 } from "./utils/graphql";
 
+/* Styles */
+import "../assets/styles.css";
+
 export default {
   name: "GroupChat",
 
-  components: {
-    Chat,
-  },
-
   data: () => ({
-    username: undefined,
-    ...chatConfig,
+    messages: [],
+    newMessage: "",
+    me: { name: "" },
+    users: [],
   }),
 
+  computed: {
+    onlineUsersString() {
+      return this.users.map((p) => p.email).join(", ");
+    },
+  },
+
   methods: {
-    async createParticipant() {
-      await Api.mutate({
-        mutation: CreateParticipant,
+    /* Get initial chat data */
+    initChat({
+      data: {
+        usersList: { items: users },
+        messagesList: { items: messages },
+      },
+    }) {
+      this.users = users;
+      this.messages = messages;
+    },
+
+    /* Create the new user */
+    createUser() {
+      Api.mutate({
+        mutation: CreateUser,
         variables: {
-          username: this.username,
+          email: this.me.email,
         },
       });
     },
 
-    deleteParticipant() {
+    /* Delete the user */
+    deleteUser() {
       Api.mutate({
-        mutation: DeleteParticipant,
-        variables: { id: this.myself.uid },
+        mutation: DeleteUser,
+        variables: { id: this.me.id },
       });
     },
 
-    addParticipants({
+    /* Add a new user */
+    addUser(user) {
+      if (this.me.email === user.email) {
+        this.me = user;
+      }
+
+      this.users.push(user);
+    },
+
+    /* Remove user */
+    removeUser(user) {
+      this.users = this.users.filter((p) => p.id != user.id);
+    },
+
+    /* Handle subscription for users */
+    handleUser({
       data: {
-        participantsList: { items },
-      },
-    }) {
-      this.participants = items.map((p) => ({
-        uid: p.id,
-        id: p.intId,
-        name: p.username,
-      }));
-    },
-
-    addParticipant(node) {
-      const participant = {
-        uid: node.id,
-        id: node.intId,
-        name: node.username,
-      };
-
-      node.username === this.username
-        ? (this.myself = participant)
-        : this.participants.push(participant);
-    },
-
-    removeParticipant(node) {
-      const index = this.participants.findIndex(p => p.id === node.intId)
-
-      this.participants.splice(index, 1)
-    },
-
-    handleParticipant({
-      data: {
-        Participants: { mutation, node },
+        Users: { mutation, node },
       },
     }) {
       ({
-        create: this.addParticipant,
-        delete: this.removeParticipant,
+        create: this.addUser,
+        delete: this.removeUser,
       }[mutation](node));
     },
 
+    /* Handle subscription for messages */
     addMessage({
       data: {
         Messages: { node },
       },
     }) {
-      const createdAt = new Date(node.createdAt);
-
-      this.messages.push({
-        content: node.content,
-        participantId: node.participant.intId,
-        myself: node.participant.intId === this.myself.id,
-        timestamp: {
-          year: createdAt.getYear(),
-          month: createdAt.getMonth(),
-          day: createdAt.getDay(),
-          hour: createdAt.getHours(),
-          minute: createdAt.getMinutes(),
-          second: createdAt.getSeconds(),
-          millisecond: createdAt.getMilliseconds(),
-        },
-        type: "text",
-      });
+      this.messages.push(node);
     },
 
-    createMessage({ content }) {
+    /* Create a new message */
+    createMessage() {
       Api.mutate({
         mutation: CreateMessage,
         variables: {
-          id: this.myself.uid,
-          content,
+          id: this.me.id,
+          content: this.newMessage,
         },
-      });
+      }).then(() => (this.newMessage = ""));
+    },
+
+    /* Before component is destroyed */
+    closeChat() {
+      /* Close subscriptions before exit */
+      Wss.close();
+      /* Delete participant */
+      this.deleteUser();
     },
   },
 
   created() {
-    /* Subescribe to new and deleted participants */
-    Wss.subscribe(ParticipantsSubscription, {
-      data: this.handleParticipant,
+    /* Subescribe to new and deleted users */
+    Wss.subscribe(UsersSubscription, {
+      data: this.handleUser,
     });
-
     /* Subscribe to new messages */
     Wss.subscribe(MessagesSubscription, {
       data: this.addMessage,
     });
-
-    /* Get current participants */
+    /* Get initial chat data */
     Api.query({
-      query: ListParticipants,
-    }).then(this.addParticipants);
+      query: InitialChatData,
+    }).then(({ data }) => {
+      this.users = data.usersList.items;
+      this.messages = data.messagesList.items;
+    });
 
     /* Delete user on refresh */
-    window.onbeforeunload = this.deleteParticipant;
+    window.onbeforeunload = this.closeChat;
   },
 
   beforeDestroy() {
-    this.deleteParticipant();
+    this.closeChat();
   },
 };
 </script>
