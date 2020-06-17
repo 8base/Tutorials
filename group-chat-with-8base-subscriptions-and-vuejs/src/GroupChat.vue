@@ -1,181 +1,198 @@
-<style>
-html, body, #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: grey;
-  text-align: center;
-  color: #2c3e50;
-  flex: 1;
+<style scoped>
+#app {
   height: 100%;
-  display: flex;
-}
-
-.signup {
-  justify-self: center;
-  align-self: center;
-  width: 100%;
 }
 
 .chat {
   width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  margin: 0 auto;
+}
+
+.signup {
+  width: 25%;
   height: 500px;
-  margin: 20px auto;
-  border-radius: 25px;
-  border: 1px solid gray;
-}
-
-.chat .msgs {
   display: flex;
-  height: 380px;
-  padding: 0 10px;
-  overflow: hidden;
-  overflow: hidden;
-  overflow-y: scroll;
+  margin: 0 auto;
+  text-align: center;
   flex-direction: column;
-}
-
-.chat .msgs .msg {
-  width: 40%;
-  margin: 5px;
-  padding: 10px;
-  border-radius: 10px;
-  background: #42b983;
-}
-
-.chat .msgs .msg.isAuthor {
-  align-self: flex-end;
-  background: #DDD;
-}
-
-.chat .msg-input {
-  display: flex;
-  padding: 10px 20px;
-  border-top: 1px solid gray;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 </style>
 
 <template>
   <div id="app">
-    <div v-if="username" class="chat">
-      <div class="msgs">
-        <div 
-          :key="i"
-          v-for="(msg, i) in messages"
-          :class="['msg', { isAuthor: msg.author === username }]"
-        >
-          {{ msg.body }}
-          <br>
-          <small>{{ msg.author }} - {{ msg.createdAt}}</small>
-        </div>
-      </div>
-
-
-      <div class="msg-input">
-        <textarea v-model="newMessage" cols="30" rows="2"></textarea>
-        <button @click="sendMessage">Send Message</button>
-      </div>
+    <div v-if="myself" class="chat">
+      <Chat
+        :colors="colors"
+        :myself="myself"
+        :messages="messages"
+        :send-images="false"
+        :submit-icon-size="30"
+        :display-header="true"
+        :hide-close-button="true"
+        :border-style="borderStyle"
+        :participants="participants"
+        :submit-image-icon-size="30"
+        :scroll-bottom="scrollBottom"
+        :chat-title="'8base Vue-Chat'"
+        :timestamp-config="timestampConfig"
+        @onMessageSubmit="createMessage"
+      />
     </div>
 
     <div v-else class="signup">
-      <label for="username">Set a username</label>
-      <br>
-      <input name="username" type="text" @blur="setUsername" />
+      <label for="email">Sign up to chat!</label>
+      <br />
+      <input
+        v-model="username"
+        type="text"
+        placeholder="first name"
+        @blur="createParticipant"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import gql from "graphql-tag";
+/* eslint-disable no-debugger */
 import Api from "./utils/api";
 import Wss from "./utils/wss";
 
+/* Quick Chat and Dependencies */
+import { Chat } from "vue-quick-chat";
+import chatConfig from "./utils/chat";
+import "vue-quick-chat/dist/vue-quick-chat.css";
+
+/* GraphQL operations */
+import {
+  ListParticipants,
+  CreateParticipant,
+  DeleteParticipant,
+  ParticipantsSubscription,
+  CreateMessage,
+  MessagesSubscription,
+} from "./utils/graphql";
+
 export default {
+  name: "GroupChat",
+
+  components: {
+    Chat,
+  },
+
   data: () => ({
-    messages: [],
     username: undefined,
-    newMessage: undefined,
+    ...chatConfig,
   }),
 
   methods: {
-    setUsername({ target: { value } }) {
-      this.username = value;
-    },
-
-    addMessage ({ data: { Messages: { node } } }) {
-      this.messages.push(node)
-    },
-
-    async getMessages() {
-      const {
-        data: {
-          messagesList: { items },
-        },
-      } = await Api.query({
-        query: gql`
-          {
-            messagesList(last: 50) {
-              items {
-                author
-                body
-                createdAt
-              }
-            }
-          }
-        `,
-      });
-
-      this.messages = items;
-    },
-
-    async sendMessage() {
+    async createParticipant() {
       await Api.mutate({
-        mutation: gql`
-          mutation($data: MessageCreateInput!) {
-            messageCreate(data: $data) {
-              body
-              author
-              createdAt
-            }
-          }
-        `,
+        mutation: CreateParticipant,
+        variables: {
+          username: this.username,
+        },
+      });
+    },
+
+    deleteParticipant() {
+      Api.mutate({
+        mutation: DeleteParticipant,
+        variables: { id: this.myself.uid },
+      });
+    },
+
+    addParticipants({
+      data: {
+        participantsList: { items },
+      },
+    }) {
+      this.participants = items.map((p) => ({
+        uid: p.id,
+        id: p.intId,
+        name: p.username,
+      }));
+    },
+
+    handleParticipant({
+      data: {
+        Participants: { mutation, node },
+      },
+    }) {
+      if (mutation === 'delete') {
+
+      }
+
+      const participant = {
+        uid: node.id,
+        id: node.intId,
+        name: node.username,
+      };
+
+      node.username === this.username
+        ? (this.myself = participant)
+        : this.participants.push(participant);
+    },
+
+    addMessage({
+      data: {
+        Messages: { node },
+      },
+    }) {
+      const createdAt = new Date(node.createdAt);
+
+      this.messages.push({
+        content: node.content,
+        participantId: node.participant.intId,
+        myself: node.participant.intId === this.myself.id,
+        timestamp: {
+          year: createdAt.getYear(),
+          month: createdAt.getMonth(),
+          day: createdAt.getDay(),
+          hour: createdAt.getHours(),
+          minute: createdAt.getMinutes(),
+          second: createdAt.getSeconds(),
+          millisecond: createdAt.getMilliseconds(),
+        },
+        type: "text",
+      });
+    },
+
+    createMessage({ content }) {
+      Api.mutate({
+        mutation: CreateMessage,
         variables: {
           data: {
-            author: this.username,
-            body: this.newMessage,
+            id: this.myself.uid,
+            content,
           },
         },
       });
-
-      this.newMessage = undefined;
     },
   },
 
-  watch: {
-    username(name) {
-      if (name) this.getMessages();
-    }
+  created() {
+    /* Subescribe to new and deleted participants */
+    Wss.subscribe(ParticipantsSubscription, {
+      data: this.handleParticipant,
+    });
+
+    /* Subscribe to new messages */
+    Wss.subscribe(MessagesSubscription, {
+      data: this.addMessage,
+    });
+
+    /* Get current participants */
+    Api.query({
+      query: ListParticipants,
+    }).then(this.addParticipants);
+
+    /* Delete user on refresh */
+    window.onbeforeunload = this.deleteParticipant;
   },
 
-  created() {
-    Wss.subscribe(gql`
-      subscription {
-        Messages(filter: { mutation_in: create }) {
-          node {
-            body
-            author
-            createdAt
-          }
-        }
-      }
-    `, {
-      data: this.addMessage,
-      err: (err) => console.log(err)
-    });
+  beforeDestroy() {
+    this.deleteParticipant();
   },
 };
 </script>

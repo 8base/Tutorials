@@ -8,5 +8,8 @@ export default new ApolloClient({
   link: createHttpLink({
     uri: VUE_APP_8BASE_API_ENDPOINT,
   }),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    fetchPolify: 'no-cache'
+  }
 });
