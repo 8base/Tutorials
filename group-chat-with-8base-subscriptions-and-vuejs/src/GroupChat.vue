@@ -114,15 +114,7 @@ export default {
       }));
     },
 
-    handleParticipant({
-      data: {
-        Participants: { mutation, node },
-      },
-    }) {
-      if (mutation === 'delete') {
-
-      }
-
+    addParticipant(node) {
       const participant = {
         uid: node.id,
         id: node.intId,
@@ -132,6 +124,23 @@ export default {
       node.username === this.username
         ? (this.myself = participant)
         : this.participants.push(participant);
+    },
+
+    removeParticipant(node) {
+      const index = this.participants.findIndex(p => p.id === node.intId)
+
+      this.participants.splice(index, 1)
+    },
+
+    handleParticipant({
+      data: {
+        Participants: { mutation, node },
+      },
+    }) {
+      ({
+        create: this.addParticipant,
+        delete: this.removeParticipant,
+      }[mutation](node));
     },
 
     addMessage({
@@ -162,10 +171,8 @@ export default {
       Api.mutate({
         mutation: CreateMessage,
         variables: {
-          data: {
-            id: this.myself.uid,
-            content,
-          },
+          id: this.myself.uid,
+          content,
         },
       });
     },
